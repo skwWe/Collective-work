@@ -1,0 +1,10 @@
+C:\Users\Dom\source\repos\UserLibrary\Methods\bin\Debug\Methods.exe.config
+C:\Users\Dom\source\repos\UserLibrary\Methods\bin\Debug\Methods.exe
+C:\Users\Dom\source\repos\UserLibrary\Methods\bin\Debug\Methods.pdb
+C:\Users\Dom\source\repos\UserLibrary\Methods\bin\Debug\UserLibrary.dll
+C:\Users\Dom\source\repos\UserLibrary\Methods\bin\Debug\UserLibrary.pdb
+C:\Users\Dom\source\repos\UserLibrary\Methods\obj\Debug\Methods.csproj.AssemblyReference.cache
+C:\Users\Dom\source\repos\UserLibrary\Methods\obj\Debug\Methods.csproj.CoreCompileInputs.cache
+C:\Users\Dom\source\repos\UserLibrary\Methods\obj\Debug\Methods.csproj.Up2Date
+C:\Users\Dom\source\repos\UserLibrary\Methods\obj\Debug\Methods.exe
+C:\Users\Dom\source\repos\UserLibrary\Methods\obj\Debug\Methods.pdb
