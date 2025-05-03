@@ -176,8 +176,58 @@ namespace UserLibrary
             Console.WriteLine("Пользователь добавлен успешно.");
         }
 
+        public static void DeleteUser()
+        {
+            Console.Write("\nВведите ID пользователя для удаления: ");
+            if (!int.TryParse(Console.ReadLine(), out int id))
+            {
+                Console.WriteLine("Некорректный ID.");
+                return;
+            }
 
+            UsersLibrary userToDelete = users.FirstOrDefault(u => u.id == id);
 
+            if (userToDelete == null)
+            {
+                Console.WriteLine("Пользователь с таким ID не найден.");
+                return;
+            }
+
+            users.Remove(userToDelete);
+            SaveUsersToCsv(filePath);
+            Console.WriteLine("Пользователь удален успешно.");
+        }
+        public static void FilterUsersByAge()
+        {
+            Console.Write("\nВведите минимальный возраст: ");
+            if (!int.TryParse(Console.ReadLine(), out int minAge))
+            {
+                Console.WriteLine("Некорректный минимальный возраст.");
+                return;
+            }
+
+            Console.Write("Введите максимальный возраст: ");
+            if (!int.TryParse(Console.ReadLine(), out int maxAge))
+            {
+                Console.WriteLine("Некорректный максимальный возраст.");
+                return;
+            }
+
+            List<UsersLibrary> filteredUsers = users.Where(u => u.age >= minAge && u.age <= maxAge).ToList();
+
+            if (filteredUsers.Count > 0)
+            {
+                Console.WriteLine("\nРезультаты фильтрации:");
+                foreach (var user in filteredUsers)
+                {
+                    Console.WriteLine(user.ToString());
+                }
+            }
+            else
+            {
+                Console.WriteLine("Пользователи не найдены.");
+            }
+        }
 
         public static void FindUsers()
         {
@@ -237,7 +287,64 @@ namespace UserLibrary
                 Console.WriteLine("Список пользователей пуст.");
             }
         }
+        public class Program
+        {
+            static void Main(string[] args)
+            {
+                string filePath = "users.csv";
+                UserData.LoadUsersFromCsv(filePath); // Load initially
 
+                while (true)
+                {
+                    Console.WriteLine("\nМеню управления пользователями:");
+                    Console.WriteLine("1. Вывести всех пользователей");
+                    Console.WriteLine("2. Добавить пользователя");
+                    Console.WriteLine("3. Изменить пользователя");
+                    Console.WriteLine("4. Удалить пользователя");
+                    Console.WriteLine("5. Поиск пользователя");
+                    Console.WriteLine("6. Фильтровать пользователей по возрасту");
+                    Console.WriteLine("7. Сохранить и выйти");
+                    Console.Write("Выберите действие: ");
+
+                    if (!int.TryParse(Console.ReadLine(), out int choice))
+                    {
+                        Console.WriteLine("Некорректный ввод. Пожалуйста, введите число от 1 до 8.");
+                        continue;
+                    }
+
+                    switch (choice)
+                    {
+                        case 1:
+                            UserData.GetAllUsers();
+                            break;
+                        case 2:
+                            UserData.AddUser();
+                            break;
+                        case 3:
+                            UserData.UpdateUser();
+                            break;
+                        case 4:
+                            UserData.DeleteUser();
+                            break;
+                        case 5:
+                            UserData.FindUsers();
+                            break;
+                        case 6:
+                            UserData.FilterUsersByAge();
+                            break;
+                        case 7:
+                            UserData.SaveUsersToCsv(filePath);
+                            Console.WriteLine("Данные сохранены. Выход.");
+                            return;
+                        default:
+                            Console.WriteLine("Неверный выбор. Пожалуйста, выберите от 1 до 8.");
+                            break;
+                    }
+
+                    Console.ReadKey(); // Чтобы консоль не закрылась сразу
+                }
+            }
+        }
 
     }
 }
