@@ -1,4 +1,4 @@
-﻿
+﻿sharp
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -89,6 +89,44 @@ namespace UserLibrary
             }
         }
 
+        public static void AddUser()
+        {
+            Console.WriteLine("\nДобавление нового пользователя:");
+
+            UsersLibrary newUser = new UsersLibrary();
+
+            Console.Write("Введите ID: ");
+            if (!int.TryParse(Console.ReadLine(), out int id))
+            {
+                Console.WriteLine("Некорректный ID. Пользователь не добавлен.");
+                return;
+            }
+            newUser.id = id;
+
+            Console.Write("Введите имя: ");
+            newUser.name = Console.ReadLine();
+
+            Console.Write("Введите фамилию: ");
+            newUser.surname = Console.ReadLine();
+
+            Console.Write("Введите страну: ");
+            newUser.country = Console.ReadLine();
+
+            Console.Write("Введите возраст: ");
+            if (!int.TryParse(Console.ReadLine(), out int age))
+            {
+                Console.WriteLine("Некорректный возраст. Пользователь не добавлен.");
+                return;
+            }
+            newUser.age = age;
+
+            users.Add(newUser);
+            SaveUsersToCsv(filePath);
+
+            Console.WriteLine("Пользователь добавлен успешно.");
+        }
+
+
         public static void UpdateUser()
         {
             Console.Write("\nВведите ID пользователя для изменения: ");
@@ -139,73 +177,74 @@ namespace UserLibrary
             Console.WriteLine("Данные пользователя успешно обновлены.");
         }
 
-        public static void AddUser()
+        public static void DeleteUser()
         {
-            Console.WriteLine("\nДобавление нового пользователя:");
-
-            UsersLibrary newUser = new UsersLibrary();
-
-            Console.Write("Введите ID: ");
+            Console.Write("\nВведите ID пользователя для удаления: ");
             if (!int.TryParse(Console.ReadLine(), out int id))
             {
-                Console.WriteLine("Некорректный ID. Пользователь не добавлен.");
+                Console.WriteLine("Некорректный ID.");
                 return;
             }
-            newUser.id = id;
 
-            Console.Write("Введите имя: ");
-            newUser.name = Console.ReadLine();
+            UsersLibrary userToDelete = users.FirstOrDefault(u => u.id == id);
 
-            Console.Write("Введите фамилию: ");
-            newUser.surname = Console.ReadLine();
-
-            Console.Write("Введите страну: ");
-            newUser.country = Console.ReadLine();
-
-            Console.Write("Введите возраст: ");
-            if (!int.TryParse(Console.ReadLine(), out int age))
+            if (userToDelete == null)
             {
-                Console.WriteLine("Некорректный возраст. Пользователь не добавлен.");
+                Console.WriteLine("Пользователь с таким ID не найден.");
                 return;
             }
-            newUser.age = age;
 
-            users.Add(newUser);
+            users.Remove(userToDelete);
             SaveUsersToCsv(filePath);
-
-            Console.WriteLine("Пользователь добавлен успешно.");
+            Console.WriteLine("Пользователь удален успешно.");
         }
 
-
-
-
-        public static void FindUsers()
+        public static void SearchUsers()
         {
-            Console.WriteLine("\nПоиск пользователей. Оставьте поле пустым, чтобы не учитывать его в фильтре.");
+            Console.Write("\nВведите строку для поиска (имя, фамилия, страна): ");
+            string searchTerm = Console.ReadLine();
 
-            Console.Write("Имя: ");
-            string name = Console.ReadLine()?.Trim();
-
-            Console.Write("Фамилия: ");
-            string surname = Console.ReadLine()?.Trim();
-
-            Console.Write("Страна: ");
-            string country = Console.ReadLine()?.Trim();
-
-            Console.Write("Возраст: ");
-            string ageInput = Console.ReadLine()?.Trim();
-            bool ageParsed = int.TryParse(ageInput, out int age);
-
-            var filteredUsers = users.Where(u =>
-                (string.IsNullOrEmpty(name) || u.name.Equals(name, StringComparison.OrdinalIgnoreCase)) &&
-                (string.IsNullOrEmpty(surname) || u.surname.Equals(surname, StringComparison.OrdinalIgnoreCase)) &&
-                (string.IsNullOrEmpty(country) || u.country.Equals(country, StringComparison.OrdinalIgnoreCase)) &&
-                (!ageParsed || u.age == age)
+            List<UsersLibrary> searchResults = users.Where(u =>
+                u.name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                u.surname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                u.country.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
             ).ToList();
+
+            if (searchResults.Count > 0)
+            {
+                Console.WriteLine("\nРезультаты поиска:");
+                foreach (var user in searchResults)
+                {
+                    Console.WriteLine(user.ToString());
+                }
+            }
+            else
+            {
+                Console.WriteLine("Пользователи не найдены.");
+            }
+        }
+
+        public static void FilterUsersByAge()
+        {
+            Console.Write("\nВведите минимальный возраст: ");
+            if (!int.TryParse(Console.ReadLine(), out int minAge))
+            {
+                Console.WriteLine("Некорректный минимальный возраст.");
+                return;
+            }
+
+            Console.Write("Введите максимальный возраст: ");
+            if (!int.TryParse(Console.ReadLine(), out int maxAge))
+            {
+                Console.WriteLine("Некорректный максимальный возраст.");
+                return;
+            }
+
+            List<UsersLibrary> filteredUsers = users.Where(u => u.age >= minAge && u.age <= maxAge).ToList();
 
             if (filteredUsers.Count > 0)
             {
-                Console.WriteLine("\nНайденные пользователи:");
+                Console.WriteLine("\nРезультаты фильтрации:");
                 foreach (var user in filteredUsers)
                 {
                     Console.WriteLine(user.ToString());
@@ -213,14 +252,9 @@ namespace UserLibrary
             }
             else
             {
-                Console.WriteLine("Пользователи с указанными параметрами не найдены.");
+                Console.WriteLine("Пользователи не найдены.");
             }
         }
-
-
-
-
-
 
         public static void GetAllUsers()
         {
@@ -238,8 +272,63 @@ namespace UserLibrary
             }
         }
 
+        public class Program
+        {
+            static void Main(string[] args)
+            {
+                string filePath = "users.csv";
+                UserData.LoadUsersFromCsv(filePath); // Load initially
 
+                while (true)
+                {
+                    Console.WriteLine("\nМеню управления пользователями:");
+                    Console.WriteLine("1. Вывести всех пользователей");
+                    Console.WriteLine("2. Добавить пользователя");
+                    Console.WriteLine("3. Изменить пользователя");
+                    Console.WriteLine("4. Удалить пользователя");
+                    Console.WriteLine("5. Поиск пользователя");
+                    Console.WriteLine("6. Фильтровать пользователей по возрасту");
+                    Console.WriteLine("7. Сохранить и выйти");
+                    Console.Write("Выберите действие: ");
+
+                    if (!int.TryParse(Console.ReadLine(), out int choice))
+                    {
+                        Console.WriteLine("Некорректный ввод. Пожалуйста, введите число от 1 до 8.");
+                        continue;
+                    }
+
+                    switch (choice)
+                    {
+                        case 1:
+                            UserData.GetAllUsers();
+                            break;
+                        case 2:
+                            UserData.AddUser();
+                            break;
+                        case 3:
+                            UserData.UpdateUser();
+                            break;
+                        case 4:
+                            UserData.DeleteUser();
+                            break;
+                        case 5:
+                            UserData.SearchUsers();
+                            break;
+                        case 6:
+                            UserData.FilterUsersByAge();
+                            break;
+                        case 7:
+                            UserData.SaveUsersToCsv(filePath);
+                            Console.WriteLine("Данные сохранены. Выход.");
+                            return;
+                        default:
+                            Console.WriteLine("Неверный выбор. Пожалуйста, выберите от 1 до 8.");
+                            break;
+                    }
+
+                    Console.ReadKey(); // Чтобы консоль не закрылась сразу
+                }
+            }
+        }
     }
 }
-
-
