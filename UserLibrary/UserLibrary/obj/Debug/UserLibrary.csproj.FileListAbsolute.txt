@@ -4,3 +4,9 @@ C:\Users\Dom\source\repos\UserLibrary\UserLibrary\obj\Debug\UserLibrary.csproj.A
 C:\Users\Dom\source\repos\UserLibrary\UserLibrary\obj\Debug\UserLibrary.csproj.CoreCompileInputs.cache
 C:\Users\Dom\source\repos\UserLibrary\UserLibrary\obj\Debug\UserLibrary.dll
 C:\Users\Dom\source\repos\UserLibrary\UserLibrary\obj\Debug\UserLibrary.pdb
+D:\source\Collective-work\UserLibrary\UserLibrary\bin\Debug\UserLibrary.dll
+D:\source\Collective-work\UserLibrary\UserLibrary\bin\Debug\UserLibrary.pdb
+D:\source\Collective-work\UserLibrary\UserLibrary\obj\Debug\UserLibrary.csproj.AssemblyReference.cache
+D:\source\Collective-work\UserLibrary\UserLibrary\obj\Debug\UserLibrary.csproj.CoreCompileInputs.cache
+D:\source\Collective-work\UserLibrary\UserLibrary\obj\Debug\UserLibrary.dll
+D:\source\Collective-work\UserLibrary\UserLibrary\obj\Debug\UserLibrary.pdb
